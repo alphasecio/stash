@@ -23,8 +23,6 @@ COPY . .
 
 RUN mkdir -p /app/data && chown -R appuser:appuser /app
 
-USER appuser
-
 EXPOSE 8080
 
-CMD ["gunicorn", "-w", "1", "-b", "0.0.0.0:8080", "server:app"]
+CMD ["sh", "-c", "mkdir -p /app/data && chown -R appuser:appuser /app/data && su appuser -s /bin/sh -c 'gunicorn -w 1 -b 0.0.0.0:8080 server:app'"]
