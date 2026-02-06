@@ -1,0 +1,121 @@
+:root {
+  --bg: #ffffff;
+  --text: #111111;
+  --accent: #333333;
+  --border: #dddddd;
+  --mono-font: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+  --ui-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--ui-font);
+  display: flex;
+  justify-content: center;
+  min-height: 100vh;
+}
+
+.container {
+  width: 100%;
+  max-width: 800px;
+  padding: 40px 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Header / Nav */
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+h1 {
+  margin: 0;
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: -0.5px;
+}
+
+h1 a { text-decoration: none; color: inherit; }
+
+/* The Toolbar (View Page) */
+.toolbar {
+  display: flex;
+  gap: 15px;
+  font-size: 0.9rem;
+}
+
+.action-link {
+  color: var(--text);
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  cursor: pointer;
+  background: none;
+  border: none;
+  padding: 0;
+  font-family: inherit;
+  font-size: inherit;
+}
+
+.action-link:hover { border-bottom-color: var(--text); }
+
+/* Main Input Area */
+.editor-wrap { flex: 1; display: flex; flex-direction: column; }
+
+textarea, .content-display {
+  width: 100%;
+  flex: 1; /* Fill remaining space */
+  min-height: 60vh;
+  border: none;
+  resize: none;
+  outline: none;
+  font-family: var(--mono-font);
+  font-size: 14px;
+  line-height: 1.6;
+  background: transparent;
+  color: var(--text);
+  white-space: pre-wrap;
+  word-wrap: break-word;
+}
+
+/* Hidden input for copy functionality */
+.hidden-link {
+  position: absolute;
+  left: -9999px;
+  opacity: 0;
+}
+
+/* Footer / Submit Area */
+.footer-actions {
+  margin-top: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.btn-primary {
+  background: var(--text);
+  color: var(--bg);
+  border: none;
+  padding: 8px 24px;
+  font-size: 0.9rem;
+  cursor: pointer;
+  border-radius: 2px;
+  transition: opacity 0.2s;
+}
+
+.btn-primary:hover { opacity: 0.8; }
+
+.meta {
+  color: #999;
+  font-size: 0.8rem;
+}
