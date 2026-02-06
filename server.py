@@ -6,7 +6,9 @@ from datetime import datetime, timedelta
 
 from flask import Flask, request, render_template, g, redirect, url_for, abort
 
-DB_PATH = os.environ.get("DB_PATH", os.path.join(os.getcwd(), "data", "stash.db"))
+DEFAULT_DB = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "stash.db")
+DB_PATH = os.environ.get("DB_PATH", DEFAULT_DB)
+
 EXPIRY_DAYS = 7
 
 app = Flask(__name__)
@@ -14,7 +16,7 @@ app = Flask(__name__)
 def get_db():
     if "db" not in g:
         db_dir = os.path.dirname(DB_PATH)
-        if db_dir:
+        if db_dir and not os.path.exists(db_dir):
             os.makedirs(db_dir, exist_ok=True)
 
         g.db = sqlite3.connect(DB_PATH, detect_types=sqlite3.PARSE_DECLTYPES)
