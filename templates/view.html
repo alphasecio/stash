@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="author" content="alphasec">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Stash {{ stash_id }}</title>
+  <link rel="stylesheet" href="/static/styles.css">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect width=%22100%22 height=%22100%22 rx=%2220%22 fill=%22%23111%22/><text y=%22.9em%22 font-size=%2280%22 x=%2250%%22 text-anchor=%22middle%22 fill=%22white%22 font-family=%22monospace%22 font-weight=%22bold%22>S</text></svg>">
+</head>
+<body>
+  <div class="container">
+    <header>
+      <h1><a href="/">Stash</a> / {{ stash_id }}</h1>
+      <nav class="toolbar">
+        <button onclick="copyUrl()" class="action-link" id="copyBtn">Copy Link</button>
+        <a href="/r/{{ stash_id }}" class="action-link">Raw</a>
+        <a href="/" class="action-link">New</a>
+      </nav>
+    </header>
+
+    <div class="editor-wrap">
+      <div class="content-display">{{ content }}</div>
+    </div>
+  </div>
+
+  <script src="/static/app.js"></script>
+</body>
+</html>
