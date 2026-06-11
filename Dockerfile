@@ -25,4 +25,7 @@ RUN mkdir -p /app/data && chown -R appuser:appuser /app
 
 EXPOSE 8080
 
+# Single worker (-w 1) is intentional: SQLite does not support concurrent writes,
+# and multiple workers would cause database locking errors. If you migrate to
+# Postgres or another multi-writer DB, you can safely increase worker count.
 CMD ["sh", "-c", "mkdir -p /app/data && chown -R appuser:appuser /app/data && su appuser -s /bin/sh -c 'gunicorn -w 1 -b 0.0.0.0:8080 server:app'"]
