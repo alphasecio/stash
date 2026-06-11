@@ -1,4 +1,5 @@
 import os
+import random
 import sqlite3
 import secrets
 import string
@@ -10,6 +11,8 @@ DEFAULT_DB = os.path.join(os.path.dirname(os.path.abspath(__file__)), "data", "s
 DB_PATH = os.environ.get("DB_PATH", DEFAULT_DB)
 
 EXPIRY_DAYS = 7
+MAX_CONTENT_BYTES = 1_000_000  # 1MB cap; raise if needed
+CLEANUP_PROBABILITY = 0.05  # run cleanup on ~1 in 20 requests
 
 app = Flask(__name__)
 
@@ -44,13 +47,19 @@ def cleanup_expired():
     db.execute("DELETE FROM stash WHERE created_at < ?", (cutoff,))
     db.commit()
 
+def maybe_cleanup():
+    # Probabilistic cleanup: avoids a DELETE query on every request.
+    # At 5% probability, expired rows are cleared roughly every 20 requests.
+    if random.random() < CLEANUP_PROBABILITY:
+        cleanup_expired()
+
 def gen_id(length=8):
     alphabet = string.ascii_letters + string.digits
     return "".join(secrets.choice(alphabet) for _ in range(length))
 
 @app.route("/")
 def index():
-    cleanup_expired()
+    maybe_cleanup()
     return render_template("index.html")
 
 @app.route("/stash", methods=["POST"])
@@ -58,6 +67,10 @@ def create_stash():
     content = request.form.get("content", "").strip()
     if not content:
         return redirect(url_for("index"))
+
+    # Enforce content size cap to prevent DB bloat
+    if len(content.encode("utf-8")) > MAX_CONTENT_BYTES:
+        abort(413)
 
     stash_id = gen_id()
     db = get_db()
@@ -71,7 +84,7 @@ def create_stash():
 
 @app.route("/s/<stash_id>")
 def view_stash(stash_id):
-    cleanup_expired()
+    maybe_cleanup()
     db = get_db()
     row = db.execute(
         "SELECT content, created_at FROM stash WHERE id = ?",
@@ -89,7 +102,7 @@ def view_stash(stash_id):
 
 @app.route("/r/<stash_id>")
 def raw_stash(stash_id):
-    cleanup_expired()
+    maybe_cleanup()
     db = get_db()
     row = db.execute(
         "SELECT content FROM stash WHERE id = ?",
